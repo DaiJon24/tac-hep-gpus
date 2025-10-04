@@ -29,6 +29,7 @@ class Particle{
 	void     print();
 	void     setMass(double);
 	double   sintheta();
+
 };
 
 //------------------------------------------------------------------------------
@@ -48,27 +49,37 @@ Particle::Particle(){
 }
 
 //*** Additional constructor ------------------------------------------------------
-Particle::Particle( ){ 
-	//FIXME
+Particle::Particle(double pt_, double eta_, double phi_, double E_){
+	p4(pt_, eta_, phi_, E_);
 }
 
 //
 //*** Members  ------------------------------------------------------
 //
 double Particle::sintheta(){
-
-	//FIXME
+	double theta = 2.0 * atan(exp(-eta));
+	return sin(theta);
 }
 
-void Particle::p4(double pT, double eta, double phi, double energy){
+void Particle::p4(double pT, double eta_, double phi_, double energy){
 
-	//FIXME
+	pt = pT;
+	eta = eta_;
+	phi = phi_;
+	E = energy;
+	p[0] = pt*cos(phi);
+	p[1] = pt*sin(phi);
+	p[2] = pt*sinh(eta);
+	p[3] = E;
+
+	double p2=p[0]*p[0]+p[1]*p[1]+p[2]*p[2];
+	m=sqrt(E*E-p2);
 
 }
 
 void Particle::setMass(double mass)
 {
-	// FIXME
+	m=mass;
 }
 
 //
@@ -79,6 +90,31 @@ void Particle::print(){
 	std::cout << "(" << p[0] <<",\t" << p[1] <<",\t"<< p[2] <<",\t"<< p[3] << ")" << "  " <<  sintheta() << std::endl;
 }
 
+class lepton : public Particle{
+	public:
+	lepton();
+	int charge;
+	void setCharge(int q);
+};
+lepton::lepton() : Particle(){
+	charge = 0;
+}
+void lepton::setCharge(int q){
+	charge = q;
+}
+
+class jet : public Particle{
+	public:
+	jet();
+	int flavour;
+	void setFlavour(int f);
+};
+jet::jet() : Particle(){
+	flavour = 0;
+}
+void jet::setFlavour(int f){
+	flavour = f;
+}
 int main() {
 	
 	/* ************* */
@@ -111,8 +147,31 @@ int main() {
 		std::cout<<" Event "<< jentry <<std::endl;	
 
 		//FIX ME
+		// Create a vector of leptons and a vector of jets
+		std::vector<lepton> leptons;
+		std::vector<jet> jets;
 
+		// Fill the vectors with the corresponding particles
+		lepton l;
+		l.p4(lepPt, lepEta, lepPhi, lepE);
+		l.setCharge(lepQ);
+		leptons.push_back(l);
 
+		for (int i = 0; i < njets; i++) {
+			jet j;
+			j.p4(jetPt[i], jetEta[i], jetPhi[i], jetE[i]);
+			j.setFlavour(jetHadronFlavour[i]);
+			jets.push_back(j);
+		}
+		// Print the particles
+		std::cout << "Leptons: " << std::endl;
+		for (size_t i = 0; i < leptons.size(); i++) {
+			leptons[i].print();
+		}
+		std::cout << "Jets: " << std::endl;
+		for (size_t i = 0; i < jets.size(); i++) {
+			jets[i].print();
+		}
 	} // Loop over all events
 
   	return 0;
