@@ -20,8 +20,16 @@ const float B_val = 2.0f;
 
 // Square matrix multiplication on CPU : C = A * B
 void matrix_mul_cpu(const float *A, const float *B, float *C, int size) {
-  //FIXME:
-  // 
+    for (int row = 0; row < size; row++) {
+        for (int col = 0; col < size; col++) {
+            float temp = 0;
+            for (int k = 0; k < size; k++) {
+                //FIXME : Add dot product of row and column
+                temp += A[row*size + k] * B[k*size + col];
+            }
+            C[row*size + col] = temp;
+        }
+    }
 }
 
 // Square matrix multiplication on GPU : C = A * B
@@ -29,14 +37,17 @@ __global__ void matrix_mul_gpu(const float *A, const float *B, float *C, int siz
 
     //FIXME:
     // create thread x index
+    int idx;
+    idx = threadIdx.x + blockIdx.x * blockDim.x;
     // create thread y index
-    idx = ;
-    idy = ;
+    int idy;
+    idy = threadIdx.y + blockIdx.y * blockDim.y;
     // Make sure we are not out of range
-    if ((idx < FIXME) && (idy < FIXME)) {
+    if ((idx < size) && (idy < size)) {
         float temp = 0;
         for (int i = 0; i < size; i++){
             //FIXME : Add dot product of row and column
+            temp += A[idy*size + i] * B[i*size + idx];
         }
         C[idy*size+idx] = temp;                    
     }
@@ -74,13 +85,17 @@ int main() {
 
     // Allocate device memory and copy input data from host to device
     cudaMalloc(&d_A, DSIZE*DSIZE*sizeof(float));
+    cudaMalloc(&d_B, DSIZE*DSIZE*sizeof(float));
+    cudaMalloc(&d_C, DSIZE*DSIZE*sizeof(float));
+    cudaCheckErrors("cudaMalloc failure");
     //FIXME:Add all other allocations and copies from host to device
-  
+    cudaMemcpy(d_A, h_A, DSIZE*DSIZE*sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, DSIZE*DSIZE*sizeof(float), cudaMemcpyHostToDevice);
 
     // Launch kernel
-    // Specify the block and grid dimentions 
-    dim3 block(,);  //FIXME
-    dim3 grid(,); //FIXME
+    // Specify the block and grid dimentions
+    dim3 block(16, 16);
+    dim3 grid((DSIZE + block.x - 1) / block.x, (DSIZE + block.y - 1) / block.y);
     matrix_mul_gpu<<<grid, block>>>(d_A, d_B, d_C, DSIZE);
 
     // Copy results back to host
@@ -93,15 +108,20 @@ int main() {
 
     // FIXME
     // Excecute and time the cpu matrix multiplication function
-
+    matrix_mul_cpu(h_A, h_B, h_C, DSIZE);
     // CPU timing
     t3 = clock();
     t3sum = ((double)(t3-t2))/CLOCKS_PER_SEC;
     printf ("Done. Compute took %f seconds\n", t3sum);
 
     // FIXME
-    // Free memory 
-    
+    // Free memory
+    delete[] h_A;
+    delete[] h_B;
+    delete[] h_C;
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
     return 0;
 
 }
