@@ -1,0 +1,30 @@
+
+## I Start my re-write by first including the alpaka Library. I then use the alpaka alpaka notation for defineing variables
+## instead of define i use constexpr which is widely used in alpaka.
+
+
+## I then need to define what exactly i want to run this file on and how which is a nvidia gpu with specific dimension and indices
+
+## then I must transform kernels into functors in alpaka using the correct notation:
+##      struct Kernel {
+##  template <typename TAcc>
+##  ALPAKA_FN_ACC void operator()(
+##  TAcc const& acc,
+##  ....)}
+
+## i then rewrite the expression for getting the global and local index using and alpaka function "getidx". then i can call the inputs in the resulting vector the
+## x and y components
+## i then simply use the alpaka notation for synchronization and making the shared variable (adding +2*radius to maunally flatten)
+
+## I then follow the same process for turning the matrix multiplication kernel into a functor
+
+##for the main:
+    # I begin by getting the device i want to use as accelerator and create the queue for submitting kernels
+    # i then define the size of my global data, threads per block(cuda blockdim), and the blocks in each dimension
+    # next I define dim3 threads and dim3 grids in alpaka notation
+    #next i allocate memory to my variables
+    # i then use alpakas notation of running functors to run the stencil kernel in my main
+    # i add a wait function to act as my device synchronization 
+    # I run the nect set of functors( matrix multiplications)
+    # wait again
+    # i then finally print complete to the host

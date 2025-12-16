@@ -1,0 +1,22 @@
+** CUDA API Summary (cuda_api_sum):
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)     Med (ns)    Min (ns)    Max (ns)     StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  -----------  ---------  -----------  -------------  ----------------------
+     98.5      256,259,729          5  51,251,945.8    152,453.0      3,140  255,935,793  114,421,775.1  cudaMalloc            
+      0.6        1,660,420          3     553,473.3    170,943.0    123,642    1,365,835      703,923.3  cudaMemcpy            
+      0.4        1,030,258          1   1,030,258.0  1,030,258.0  1,030,258    1,030,258            0.0  cudaDeviceSynchronize 
+      0.3          866,236          5     173,247.2    176,933.0      7,401      386,787      164,912.6  cudaFree              
+      0.1          276,725          3      92,241.7     33,731.0      9,650      233,344      122,790.0  cudaLaunchKernel      
+      0.0          102,071          1     102,071.0    102,071.0    102,071      102,071            0.0  cuLibraryLoadData     
+      0.0            1,680          1       1,680.0      1,680.0      1,680        1,680            0.0  cuModuleGetLoadingMode
+      0.0            1,510          3         503.3        400.0        270          840          298.7  cuKernelGetName       
+      0.0            1,100          2         550.0        550.0        540          560           14.1  cuLibraryGetKernel    
+
+information from running stencil.cu
+
+** CUDA GPU Kernel Summary (cuda_gpu_kern_sum):
+
+ Time (%)  Total Time (ns)  Instances  Avg (ns)   Med (ns)   Min (ns)  Max (ns)  StdDev (ns)                         Name                       
+ --------  ---------------  ---------  ---------  ---------  --------  --------  -----------  --------------------------------------------------
+     87.6          936,713          1  936,713.0  936,713.0   936,713   936,713          0.0  matMulKernel(const int *, const int *, int *, int)
+     12.4          133,181          2   66,590.5   66,590.5    66,527    66,654         89.8  stencilKernel(const int *, int *, int)            

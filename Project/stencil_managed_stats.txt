@@ -1,0 +1,17 @@
+**Cuda API Summary
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)     Med (ns)    Min (ns)    Max (ns)     StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  -----------  ---------  -----------  -------------  ----------------------
+     97.9      267,647,872          5  53,529,574.4     34,971.0      4,480  267,562,310  119,647,937.6  cudaMallocManaged     
+      1.5        4,220,519          1   4,220,519.0  4,220,519.0  4,220,519    4,220,519            0.0  cudaDeviceSynchronize 
+      0.3          817,705          5     163,541.0    157,903.0     27,861      299,816      110,743.0  cudaFree              
+      0.2          553,890          3     184,630.0     34,080.0      9,391      510,419      282,411.5  cudaLaunchKernel      
+      0.1          181,803          1     181,803.0    181,803.0    181,803      181,803            0.0  cuLibraryLoadData     
+      0.0            1,510          3         503.3        440.0        190          880          349.3  cuKernelGetName       
+      0.0            1,190          1       1,190.0      1,190.0      1,190        1,190            0.0  cuModuleGetLoadingMode
+      0.0            1,140          2         570.0        570.0        500          640           99.0  cuLibraryGetKernel    
+
+** CUDA GPU Kernel Summary (cuda_gpu_kern_sum):
+Time (%)  Total Time (ns)  Instances   Avg (ns)     Med (ns)    Min (ns)   Max (ns)   StdDev (ns)                         Name                       
+ --------  ---------------  ---------  -----------  -----------  ---------  ---------  -----------  --------------------------------------------------
+     70.4        2,999,672          2  1,499,836.0  1,499,836.0  1,004,264  1,995,408    700,844.6  stencilKernel(const int *, int *, int)            
+     29.6        1,263,169          1  1,263,169.0  1,263,169.0  1,263,169  1,263,169          0.0  matMulKernel(const int *, const int *, int *, int)
